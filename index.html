@@ -1,0 +1,2050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>💎 Zhufu Gems - Professional Dashboard</title>
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <style>
+        /* ============================================================
+           RESET & BASE
+           ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d0d1a;
+            --bg-secondary: #1a1a2e;
+            --bg-card: #16213e;
+            --bg-card-hover: #1a2744;
+            --gold: #d4af37;
+            --gold-light: #f0d080;
+            --gold-dark: #b8961a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0aec0;
+            --text-muted: #6b7280;
+            --border-color: #2d3748;
+            --shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+            --radius: 12px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* ============================================================
+           SCROLLBAR
+           ============================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--gold);
+            border-radius: 10px;
+        }
+
+        /* ============================================================
+           SIDEBAR
+           ============================================================ */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 220px;
+            height: 100vh;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            padding: 20px 0;
+            z-index: 1000;
+            transition: var(--transition);
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            padding: 0 20px 30px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+        }
+
+        .sidebar .logo h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            color: var(--gold);
+            letter-spacing: 1px;
+        }
+
+        .sidebar .logo p {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .sidebar .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 12px 24px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            cursor: pointer;
+            transition: var(--transition);
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-item:hover {
+            background: rgba(212, 175, 55, 0.08);
+            color: var(--text-primary);
+        }
+
+        .sidebar .nav-item.active {
+            color: var(--gold);
+            border-left-color: var(--gold);
+            background: rgba(212, 175, 55, 0.08);
+        }
+
+        .sidebar .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .sidebar .nav-item .badge {
+            margin-left: auto;
+            background: var(--gold);
+            color: var(--bg-primary);
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 20px;
+            font-weight: 700;
+        }
+
+        /* ============================================================
+           MAIN CONTENT
+           ============================================================ */
+        .main-content {
+            margin-left: 220px;
+            padding: 24px 32px;
+            min-height: 100vh;
+        }
+
+        /* ============================================================
+           HEADER
+           ============================================================ */
+        .top-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .top-header .page-title h2 {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .top-header .page-title p {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .top-header .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .top-header .header-actions .date-display {
+            font-size: 13px;
+            color: var(--text-secondary);
+            background: var(--bg-card);
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--gold);
+            color: var(--bg-primary);
+        }
+
+        .btn-primary:hover {
+            background: var(--gold-light);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #15803d;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b91c1c;
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--gold);
+            color: var(--gold);
+        }
+
+        .btn-sm {
+            padding: 4px 12px;
+            font-size: 11px;
+        }
+
+        /* ============================================================
+           PAGES (Hidden by default)
+           ============================================================ */
+        .page {
+            display: none;
+            animation: fadeIn 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================================
+           KPI GRID
+           ============================================================ */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .kpi-card {
+            background: var(--bg-card);
+            padding: 18px 20px;
+            border-radius: var(--radius);
+            border-bottom: 3px solid var(--gold);
+            transition: var(--transition);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow);
+            background: var(--bg-card-hover);
+        }
+
+        .kpi-card .label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .kpi-card .value {
+            font-size: 24px;
+            font-weight: 800;
+            margin-top: 4px;
+        }
+
+        .kpi-card .change {
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        .kpi-card .change.up {
+            color: #16a34a;
+        }
+        .kpi-card .change.down {
+            color: #dc2626;
+        }
+
+        /* ============================================================
+           CHART GRID
+           ============================================================ */
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .chart-box {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+        }
+
+        .chart-box h3 {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+        }
+
+        .chart-box canvas {
+            max-height: 260px;
+            max-width: 100%;
+        }
+
+        /* ============================================================
+           TABLE
+           ============================================================ */
+        .table-container {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .table-container .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .table-container .table-header h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .table-container .table-header input,
+        .table-container .table-header select {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 13px;
+        }
+
+        .table-container table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+
+        .table-container th {
+            text-align: left;
+            padding: 10px 12px;
+            border-bottom: 2px solid var(--border-color);
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .table-container td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .table-container tr:hover td {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .status-badge {
+            padding: 3px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            display: inline-block;
+        }
+
+        .status-badge.available {
+            background: rgba(22, 163, 74, 0.2);
+            color: #16a34a;
+        }
+
+        .status-badge.sold {
+            background: rgba(220, 38, 38, 0.2);
+            color: #dc2626;
+        }
+
+        .status-badge.pending {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        /* ============================================================
+           POS PAGE
+           ============================================================ */
+        .pos-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .pos-form {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .pos-form .form-group {
+            margin-bottom: 16px;
+        }
+
+        .pos-form .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .pos-form .form-group input,
+        .pos-form .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .pos-form .form-group input:focus,
+        .pos-form .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+        }
+
+        .pos-form .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .pos-result {
+            background: var(--bg-card);
+            border-radius: var(--radius);
+            padding: 24px;
+        }
+
+        .pos-result .gem-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 16px 0;
+        }
+
+        .pos-result .gem-details .detail-item {
+            background: var(--bg-secondary);
+            padding: 10px 14px;
+            border-radius: 8px;
+        }
+
+        .pos-result .gem-details .detail-item .label {
+            font-size: 10px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .pos-result .gem-details .detail-item .value {
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .pos-result .total-display {
+            text-align: center;
+            padding: 16px;
+            background: var(--gold);
+            color: var(--bg-primary);
+            border-radius: 8px;
+            margin: 16px 0;
+        }
+
+        .pos-result .total-display .label {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .pos-result .total-display .value {
+            font-size: 32px;
+            font-weight: 800;
+        }
+
+        .pos-result .invoice-preview {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 12px;
+            font-size: 13px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .pos-result .invoice-preview .inv-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .pos-result .invoice-preview .inv-row:last-child {
+            border-bottom: none;
+        }
+
+        /* ============================================================
+           MODAL
+           ============================================================ */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9998;
+            display: none;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border-radius: var(--radius);
+            padding: 32px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+        }
+
+        .modal h3 {
+            font-size: 18px;
+            margin-bottom: 16px;
+        }
+
+        .modal .form-group {
+            margin-bottom: 14px;
+        }
+
+        .modal .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .modal .form-group input,
+        .modal .form-group select {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .modal .form-group input:focus,
+        .modal .form-group select:focus {
+            outline: none;
+            border-color: var(--gold);
+        }
+
+        .modal .modal-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 16px;
+            justify-content: flex-end;
+        }
+
+        /* ============================================================
+           TOAST
+           ============================================================ */
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--bg-card);
+            border-left: 4px solid var(--gold);
+            padding: 16px 24px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            color: var(--text-primary);
+            font-size: 14px;
+            z-index: 9999;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            max-width: 400px;
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast.success {
+            border-left-color: #16a34a;
+        }
+        .toast.error {
+            border-left-color: #dc2626;
+        }
+
+        /* ============================================================
+           RESPONSIVE
+           ============================================================ */
+        @media (max-width: 1024px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+            }
+            .pos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+                padding: 12px 0;
+            }
+
+            .sidebar .logo h1,
+            .sidebar .logo p,
+            .sidebar .nav-item span {
+                display: none;
+            }
+
+            .sidebar .nav-item {
+                padding: 12px 0;
+                justify-content: center;
+            }
+
+            .sidebar .nav-item i {
+                font-size: 18px;
+            }
+
+            .sidebar .nav-item .badge {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 60px;
+                padding: 16px;
+            }
+
+            .kpi-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+            }
+
+            .kpi-card .value {
+                font-size: 18px;
+            }
+
+            .top-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .pos-form .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .pos-result .gem-details {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .kpi-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 6px;
+            }
+            .kpi-card {
+                padding: 12px;
+            }
+            .kpi-card .value {
+                font-size: 14px;
+            }
+            .kpi-card .label {
+                font-size: 9px;
+            }
+        }
+
+        /* ============================================================
+           UTILITY
+           ============================================================ */
+        .text-gold {
+            color: var(--gold);
+        }
+        .text-muted {
+            color: var(--text-muted);
+        }
+        .mt-16 {
+            margin-top: 16px;
+        }
+        .mb-16 {
+            margin-bottom: 16px;
+        }
+        .flex {
+            display: flex;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .gap-8 {
+            gap: 8px;
+        }
+        .gap-12 {
+            gap: 12px;
+        }
+        .gap-16 {
+            gap: 16px;
+        }
+        .text-center {
+            text-align: center;
+        }
+        .w-full {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    SIDEBAR
+    ============================================================ -->
+    <nav class="sidebar">
+        <div class="logo">
+            <h1>💎 Zhufu</h1>
+            <p>Gems</p>
+        </div>
+
+        <a class="nav-item active" data-page="dashboard">
+            <i class="fas fa-chart-pie"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a class="nav-item" data-page="pos">
+            <i class="fas fa-cash-register"></i>
+            <span>POS</span>
+            <span class="badge">New</span>
+        </a>
+
+        <a class="nav-item" data-page="inventory">
+            <i class="fas fa-gem"></i>
+            <span>Inventory</span>
+        </a>
+
+        <a class="nav-item" data-page="sales">
+            <i class="fas fa-history"></i>
+            <span>Sales</span>
+        </a>
+
+        <a class="nav-item" data-page="reports">
+            <i class="fas fa-file-alt"></i>
+            <span>Reports</span>
+        </a>
+    </nav>
+
+    <!-- ============================================================
+    MAIN CONTENT
+    ============================================================ -->
+    <div class="main-content">
+
+        <!-- ===== TOP HEADER ===== -->
+        <div class="top-header">
+            <div class="page-title">
+                <h2 id="pageTitle">📊 Dashboard</h2>
+                <p id="pageSubtitle">Overview of your gem business</p>
+            </div>
+            <div class="header-actions">
+                <span class="date-display" id="currentDate"></span>
+                <button class="btn btn-primary" onclick="refreshData()">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        PAGE: DASHBOARD
+        ============================================================ -->
+        <div class="page active" id="page-dashboard">
+
+            <div class="kpi-grid" id="kpiGrid">
+                <div class="kpi-card">
+                    <div class="label">💰 Net Worth</div>
+                    <div class="value" id="kpiNetWorth">$0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">📦 Stock Value</div>
+                    <div class="value" id="kpiStockValue">$0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">🏷️ Local Sales</div>
+                    <div class="value" id="kpiLocalSales">$0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">🌏 China Sales</div>
+                    <div class="value" id="kpiChinaSales">$0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">📊 Total Sales</div>
+                    <div class="value" id="kpiTotalSales">$0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+                <div class="kpi-card">
+                    <div class="label">📦 Total Pieces</div>
+                    <div class="value" id="kpiTotalPieces">0</div>
+                    <div class="change up">▲ 0%</div>
+                </div>
+            </div>
+
+            <div class="chart-grid">
+                <div class="chart-box">
+                    <h3>📈 Monthly Sales Trend</h3>
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>🧩 Sales by Gem Type</h3>
+                    <canvas id="gemTypeChart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>📋 Recent Sales</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Customer</th>
+                            <th>Gem</th>
+                            <th>Carats</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="recentSalesBody">
+                        <tr>
+                            <td colspan="6" class="text-muted" style="text-align:center; padding:20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading sales data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        PAGE: POS
+        ============================================================ -->
+        <div class="page" id="page-pos">
+            <div class="pos-grid">
+                <div class="pos-form">
+                    <h3 style="margin-bottom:16px;">💎 New Sale</h3>
+
+                    <div class="form-group">
+                        <label>Customer Name</label>
+                        <input type="text" id="posCustomer" placeholder="Enter customer name..." />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Search Gem ID</label>
+                        <input type="text" id="posSearch" placeholder="Type G-001 or LOT-001..." list="gemList" />
+                        <datalist id="gemList"></datalist>
+                    </div>
+
+                    <div id="posGemDetails" style="display:none;">
+                        <div class="gem-details">
+                            <div class="detail-item">
+                                <div class="label">Gem Type</div>
+                                <div class="value" id="posGemType">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Quality</div>
+                                <div class="value" id="posQuality">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Carats / Piece</div>
+                                <div class="value" id="posCaratsPerPiece">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Available Pieces</div>
+                                <div class="value" id="posAvailablePieces">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Available Carats</div>
+                                <div class="value" id="posAvailableCarats">-</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="label">Cost / Carat</div>
+                                <div class="value" id="posCostPerCarat">-</div>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>Pieces Sold</label>
+                                <input type="number" id="posPiecesSold" min="1" value="1" oninput="updatePOSTotal()" />
+                            </div>
+                            <div class="form-group">
+                                <label>Price / Carat</label>
+                                <input type="number" id="posPricePerCarat" placeholder="0" oninput="updatePOSTotal()" />
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Payment Type</label>
+                            <select id="posPayment">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit">Credit</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                            </select>
+                        </div>
+
+                        <div class="total-display">
+                            <div class="label">Total Amount</div>
+                            <div class="value" id="posTotalAmount">$0.00</div>
+                        </div>
+
+                        <div style="display:flex; gap:12px; margin-top:12px; flex-wrap:wrap;">
+                            <button class="btn btn-success" onclick="saveSale()" style="flex:1;">
+                                <i class="fas fa-save"></i> Save Sale
+                            </button>
+                            <button class="btn btn-outline" onclick="printInvoice()">
+                                <i class="fas fa-print"></i> Invoice
+                            </button>
+                            <button class="btn btn-outline" onclick="clearPOS()">
+                                <i class="fas fa-undo"></i> Clear
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="posNoGem" style="display:block; text-align:center; padding:40px 0; color:var(--text-muted);">
+                        <i class="fas fa-search" style="font-size:48px; display:block; margin-bottom:12px;"></i>
+                        <p>Search for a gem ID above to start a sale.</p>
+                    </div>
+                </div>
+
+                <div class="pos-result">
+                    <h3 style="margin-bottom:12px;">📋 Sale Summary</h3>
+                    <div id="posSummary">
+                        <p class="text-muted" style="text-align:center; padding:40px 0;">
+                            <i class="fas fa-cart-plus" style="font-size:48px; display:block; margin-bottom:12px;"></i>
+                            No sale in progress.<br />Search and select a gem to begin.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        PAGE: INVENTORY
+        ============================================================ -->
+        <div class="page" id="page-inventory">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>📦 Gem Inventory</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="text" id="invSearch" placeholder="Search..." oninput="renderInventory()" />
+                        <select id="invTypeFilter" onchange="renderInventory()">
+                            <option value="all">All Types</option>
+                            <option value="Diamond">Diamond</option>
+                            <option value="Ruby">Ruby</option>
+                            <option value="Sapphire">Sapphire</option>
+                            <option value="Emerald">Emerald</option>
+                        </select>
+                        <select id="invStatusFilter" onchange="renderInventory()">
+                            <option value="all">All Status</option>
+                            <option value="Available">Available</option>
+                            <option value="Sold">Sold</option>
+                        </select>
+                        <button class="btn btn-primary" onclick="showAddGemModal()">
+                            <i class="fas fa-plus"></i> Add Gem
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Type</th>
+                            <th>Quality</th>
+                            <th>Carats</th>
+                            <th>Cost</th>
+                            <th>Pieces</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryBody">
+                        <tr>
+                            <td colspan="8" class="text-muted" style="text-align:center; padding:20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading inventory...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        PAGE: SALES
+        ============================================================ -->
+        <div class="page" id="page-sales">
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>📋 Sales History</h3>
+                    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                        <input type="text" id="salesSearch" placeholder="Search..." oninput="renderSales()" />
+                        <select id="salesTypeFilter" onchange="renderSales()">
+                            <option value="all">All Sales</option>
+                            <option value="Local">Local</option>
+                            <option value="China">China</option>
+                        </select>
+                        <button class="btn btn-outline" onclick="exportSalesCSV()">
+                            <i class="fas fa-file-export"></i> Export CSV
+                        </button>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Invoice</th>
+                            <th>Date</th>
+                            <th>Customer</th>
+                            <th>Gem ID</th>
+                            <th>Carats</th>
+                            <th>Total</th>
+                            <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody id="salesBody">
+                        <tr>
+                            <td colspan="7" class="text-muted" style="text-align:center; padding:20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading sales...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ============================================================
+        PAGE: REPORTS
+        ============================================================ -->
+        <div class="page" id="page-reports">
+            <div class="chart-grid">
+                <div class="chart-box">
+                    <h3>📊 Profit & Loss</h3>
+                    <canvas id="pnlChart"></canvas>
+                </div>
+                <div class="chart-box">
+                    <h3>🌍 Sales by Region</h3>
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+
+            <div class="table-container">
+                <div class="table-header">
+                    <h3>🏆 Top Customers</h3>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Customer</th>
+                            <th>Total Purchases</th>
+                            <th>Carats Bought</th>
+                        </tr>
+                    </thead>
+                    <tbody id="topCustomersBody">
+                        <tr>
+                            <td colspan="4" class="text-muted" style="text-align:center; padding:20px;">
+                                <i class="fas fa-spinner fa-spin"></i> Loading data...
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================
+    MODAL (Add/Edit Gem)
+    ============================================================ -->
+    <div class="modal-overlay" id="gemModal">
+        <div class="modal">
+            <h3 id="gemModalTitle">Add New Gem</h3>
+            <div class="form-group">
+                <label>Stone ID</label>
+                <input type="text" id="modalId" placeholder="e.g., G-001" />
+            </div>
+            <div class="form-group">
+                <label>Gem Type</label>
+                <input type="text" id="modalType" placeholder="e.g., Diamond" />
+            </div>
+            <div class="form-group">
+                <label>Quality</label>
+                <input type="text" id="modalQuality" placeholder="e.g., VVS" />
+            </div>
+            <div class="form-group">
+                <label>Carats</label>
+                <input type="number" id="modalCarats" placeholder="e.g., 2.5" step="0.1" />
+            </div>
+            <div class="form-group">
+                <label>Cost</label>
+                <input type="number" id="modalCost" placeholder="e.g., 12500" />
+            </div>
+            <div class="form-group">
+                <label>Pieces</label>
+                <input type="number" id="modalPieces" placeholder="e.g., 1" min="1" />
+            </div>
+            <div class="form-group">
+                <label>Supplier</label>
+                <input type="text" id="modalSupplier" placeholder="e.g., Gemfields Ltd" />
+            </div>
+            <div class="form-group">
+                <label>Status</label>
+                <select id="modalStatus">
+                    <option value="Available">Available</option>
+                    <option value="Sold">Sold</option>
+                </select>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-outline" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="saveGem()">Save Gem</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <!-- ============================================================
+    JAVASCRIPT - COMPLETE WORKING CODE
+    ============================================================ -->
+    <script>
+        // ============================================================
+        // DATA STORE
+        // ============================================================
+
+        let gemStock = [
+            { id: 'G-001', date: '2026-01-01', gemType: 'Diamond', quality: 'VVS', carats: 2.5, cost: 12500,
+                status: 'Available', purchaseType: 'Cash', supplier: 'Gemfields Ltd', pieces: 1, caratsPerPiece: 2.5 },
+            { id: 'G-002', date: '2026-01-05', gemType: 'Ruby', quality: 'VS', carats: 3.0, cost: 9000,
+                status: 'Available', purchaseType: 'Credit', supplier: 'Rio Tinto', pieces: 1, caratsPerPiece: 3.0 },
+            { id: 'G-003', date: '2026-01-10', gemType: 'Sapphire', quality: 'VVS', carats: 1.8, cost: 7200,
+                status: 'Sold', purchaseType: 'Cash', supplier: 'Blue Moon Gems', pieces: 1, caratsPerPiece: 1.8 },
+            { id: 'LOT-001', date: '2026-01-15', gemType: 'Emerald', quality: 'VS', carats: 15.0, cost: 45000,
+                status: 'Available', purchaseType: 'Credit', supplier: 'Crown Gems', pieces: 5, caratsPerPiece: 3.0 },
+            { id: 'G-004', date: '2026-02-01', gemType: 'Diamond', quality: 'IF', carats: 4.0, cost: 28000,
+                status: 'Available', purchaseType: 'Cash', supplier: 'Petra Diamonds', pieces: 1, caratsPerPiece: 4.0 },
+            { id: 'G-005', date: '2026-02-05', gemType: 'Ruby', quality: 'VVS', carats: 2.2, cost: 11000,
+                status: 'Sold', purchaseType: 'Credit', supplier: 'Myanmar Gems', pieces: 1, caratsPerPiece: 2.2 },
+            { id: 'LOT-002', date: '2026-02-10', gemType: 'Sapphire', quality: 'VS', carats: 20.0, cost: 56000,
+                status: 'Available', purchaseType: 'Cash', supplier: 'Sri Lankan Gems', pieces: 4, caratsPerPiece: 5.0 },
+            { id: 'G-006', date: '2026-03-01', gemType: 'Emerald', quality: 'VVS', carats: 3.5, cost: 17500,
+                status: 'Available', purchaseType: 'Credit', supplier: 'Colombian Emeralds', pieces: 1,
+                caratsPerPiece: 3.5 }
+        ];
+
+        let localSales = [
+            { date: '2026-01-15', invoice: 'INV-001', customer: 'De Beers Ltd', gemId: 'G-003', piecesSold: 1,
+                caratsSold: 1.8, pricePerCarat: 6500, total: 11700, payment: 'Cash' },
+            { date: '2026-02-10', invoice: 'INV-002', customer: 'Cartier SA', gemId: 'G-005', piecesSold: 1,
+                caratsSold: 2.2, pricePerCarat: 4800, total: 10560, payment: 'Credit' },
+            { date: '2026-02-20', invoice: 'INV-003', customer: 'Tiffany & Co', gemId: 'LOT-001', piecesSold: 2,
+                caratsSold: 6.0, pricePerCarat: 4200, total: 25200, payment: 'Credit' },
+            { date: '2026-03-05', invoice: 'INV-004', customer: 'Harry Winston', gemId: 'G-001', piecesSold: 1,
+                caratsSold: 2.5, pricePerCarat: 8500, total: 21250, payment: 'Cash' }
+        ];
+
+        let chinaSales = [
+            { date: '2026-01-20', invoice: 'CHN-001', customer: 'Beijing Gems', gemId: 'LOT-001', piecesSold: 3,
+                caratsSold: 9.0, pricePerCarat: 4000, total: 36000, payment: 'Credit' },
+            { date: '2026-02-15', invoice: 'CHN-002', customer: 'Shanghai Jewels', gemId: 'G-002', piecesSold: 1,
+                caratsSold: 3.0, pricePerCarat: 5500, total: 16500, payment: 'Cash' },
+            { date: '2026-03-10', invoice: 'CHN-003', customer: 'Hong Kong Gems', gemId: 'LOT-002', piecesSold: 2,
+                caratsSold: 10.0, pricePerCarat: 4800, total: 48000, payment: 'Credit' }
+        ];
+
+        let editingGemId = null;
+        let charts = {};
+        let selectedGem = null;
+
+        // ============================================================
+        // NAVIGATION
+        // ============================================================
+
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+                this.classList.add('active');
+
+                const page = this.dataset.page;
+                document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+                document.getElementById('page-' + page).classList.add('active');
+
+                const titles = {
+                    dashboard: ['📊 Dashboard', 'Overview of your gem business'],
+                    pos: ['💎 Point of Sale', 'Create new sales transactions'],
+                    inventory: ['📦 Inventory', 'Manage your gem stock'],
+                    sales: ['📋 Sales History', 'View all past transactions'],
+                    reports: ['📊 Reports', 'Analytics and insights']
+                };
+                document.getElementById('pageTitle').textContent = titles[page][0];
+                document.getElementById('pageSubtitle').textContent = titles[page][1];
+
+                // Render page content
+                if (page === 'dashboard') updateDashboard();
+                if (page === 'inventory') renderInventory();
+                if (page === 'sales') renderSales();
+                if (page === 'reports') renderReports();
+                if (page === 'pos') populateGemList();
+            });
+        });
+
+        // ============================================================
+        // DATE DISPLAY
+        // ============================================================
+
+        document.getElementById('currentDate').textContent = new Date().toLocaleString('en-US', {
+            weekday: 'short',
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+
+        // ============================================================
+        // TOAST NOTIFICATIONS
+        // ============================================================
+
+        function showToast(message, type = '') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            toast.classList.add('show');
+            clearTimeout(toast._timeout);
+            toast._timeout = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // ============================================================
+        // REFRESH
+        // ============================================================
+
+        function refreshData() {
+            showToast('🔄 Data refreshed!', 'success');
+            updateDashboard();
+            renderInventory();
+            renderSales();
+            renderReports();
+            populateGemList();
+        }
+
+        // ============================================================
+        // DASHBOARD
+        // ============================================================
+
+        function updateDashboard() {
+            const allSales = [...localSales, ...chinaSales];
+            const totalLocal = localSales.reduce((s, r) => s + r.total, 0);
+            const totalChina = chinaSales.reduce((s, r) => s + r.total, 0);
+            const totalSales = totalLocal + totalChina;
+            const stockValue = gemStock.filter(g => g.status === 'Available').reduce((s, g) => s + g.cost, 0);
+            const totalPieces = gemStock.reduce((s, g) => s + g.pieces, 0);
+            const netWorth = stockValue + totalSales;
+
+            document.getElementById('kpiNetWorth').textContent = '$' + netWorth.toLocaleString();
+            document.getElementById('kpiStockValue').textContent = '$' + stockValue.toLocaleString();
+            document.getElementById('kpiLocalSales').textContent = '$' + totalLocal.toLocaleString();
+            document.getElementById('kpiChinaSales').textContent = '$' + totalChina.toLocaleString();
+            document.getElementById('kpiTotalSales').textContent = '$' + totalSales.toLocaleString();
+            document.getElementById('kpiTotalPieces').textContent = totalPieces;
+
+            // Recent Sales
+            const recent = [...allSales].sort((a, b) => new Date(b.date) - new Date(a.date)).slice(0, 5);
+            const tbody = document.getElementById('recentSalesBody');
+            if (recent.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="6" class="text-muted" style="text-align:center;padding:20px;">No sales yet</td></tr>';
+            } else {
+                tbody.innerHTML = recent.map(s => `
+                            <tr>
+                                <td>${s.invoice}</td>
+                                <td>${s.customer}</td>
+                                <td>${s.gemId}</td>
+                                <td>${s.caratsSold}</td>
+                                <td>$${s.total.toLocaleString()}</td>
+                                <td><span class="status-badge ${s.payment === 'Cash' ? 'available' : 'pending'}">${s.payment}</span></td>
+                            </tr>
+                        `).join('');
+            }
+
+            updateCharts();
+        }
+
+        // ============================================================
+        // CHARTS
+        // ============================================================
+
+        function updateCharts() {
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            const salesData = months.map(m => {
+                const local = localSales.filter(s => new Date(s.date).toLocaleString('en', { month: 'short' }) === m)
+                    .reduce((sum, r) => sum + r.total, 0);
+                const china = chinaSales.filter(s => new Date(s.date).toLocaleString('en', { month: 'short' }) === m)
+                    .reduce((sum, r) => sum + r.total, 0);
+                return local + china;
+            });
+
+            if (charts.monthly) charts.monthly.destroy();
+            if (charts.gemType) charts.gemType.destroy();
+
+            const ctx1 = document.getElementById('monthlyChart').getContext('2d');
+            charts.monthly = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: months,
+                    datasets: [{
+                        label: 'Sales',
+                        data: salesData,
+                        borderColor: '#d4af37',
+                        backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#d4af37'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#a0aec0' } } },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#a0aec0', callback: v => '$' + v.toLocaleString() }
+                        },
+                        x: { ticks: { color: '#a0aec0' } }
+                    }
+                }
+            });
+
+            const gemTypes = ['Diamond', 'Ruby', 'Sapphire', 'Emerald'];
+            const gemData = gemTypes.map(t => {
+                return gemStock.filter(g => g.gemType === t).reduce((s, g) => s + g.cost, 0);
+            });
+
+            const ctx2 = document.getElementById('gemTypeChart').getContext('2d');
+            charts.gemType = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: gemTypes,
+                    datasets: [{
+                        data: gemData,
+                        backgroundColor: ['#d4af37', '#dc2626', '#3b82f6', '#16a34a'],
+                        borderWidth: 2,
+                        borderColor: '#1a1a2e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'right', labels: { color: '#a0aec0', usePointStyle: true } }
+                    }
+                }
+            });
+        }
+
+        // ============================================================
+        // POS SYSTEM
+        // ============================================================
+
+        function populateGemList() {
+            const datalist = document.getElementById('gemList');
+            datalist.innerHTML = gemStock.map(g => `<option value="${g.id}">${g.id} - ${g.gemType}</option>`).join('');
+        }
+
+        document.getElementById('posSearch').addEventListener('input', function() {
+            const search = this.value.trim();
+            if (!search) {
+                document.getElementById('posNoGem').style.display = 'block';
+                document.getElementById('posGemDetails').style.display = 'none';
+                document.getElementById('posSummary').innerHTML =
+                    '<p class="text-muted" style="text-align:center;padding:40px 0;"><i class="fas fa-cart-plus" style="font-size:48px;display:block;margin-bottom:12px;"></i>No sale in progress.<br />Search and select a gem to begin.</p>';
+                selectedGem = null;
+                return;
+            }
+
+            const gem = gemStock.find(g => g.id === search);
+            if (gem) {
+                selectedGem = gem;
+                document.getElementById('posNoGem').style.display = 'none';
+                document.getElementById('posGemDetails').style.display = 'block';
+
+                document.getElementById('posGemType').textContent = gem.gemType;
+                document.getElementById('posQuality').textContent = gem.quality;
+                document.getElementById('posCaratsPerPiece').textContent = gem.caratsPerPiece + ' ct';
+                document.getElementById('posAvailablePieces').textContent = gem.pieces;
+                document.getElementById('posAvailableCarats').textContent = (gem.pieces * gem.caratsPerPiece) + ' ct';
+                document.getElementById('posCostPerCarat').textContent = '$' + (gem.cost / gem.carats).toFixed(2);
+
+                document.getElementById('posPricePerCarat').value = '';
+                document.getElementById('posPiecesSold').value = 1;
+                document.getElementById('posPiecesSold').max = gem.pieces;
+                updatePOSTotal();
+
+                updatePOSSummary(gem);
+                showToast('✅ Gem found: ' + gem.id, 'success');
+            } else {
+                document.getElementById('posNoGem').style.display = 'block';
+                document.getElementById('posGemDetails').style.display = 'none';
+                selectedGem = null;
+                showToast('❌ No gem found with ID: ' + search, 'error');
+            }
+        });
+
+        function updatePOSTotal() {
+            const pieces = parseInt(document.getElementById('posPiecesSold').value) || 0;
+            const price = parseFloat(document.getElementById('posPricePerCarat').value) || 0;
+            const caratsPerPiece = selectedGem ? selectedGem.caratsPerPiece : 0;
+            const total = pieces * caratsPerPiece * price;
+            document.getElementById('posTotalAmount').textContent = '$' + total.toFixed(2);
+
+            if (selectedGem && pieces > selectedGem.pieces) {
+                document.getElementById('posPiecesSold').value = selectedGem.pieces;
+                showToast('⚠️ Only ' + selectedGem.pieces + ' pieces available', 'error');
+                updatePOSTotal();
+            }
+
+            if (selectedGem) {
+                updatePOSSummary(selectedGem);
+            }
+        }
+
+        function updatePOSSummary(gem) {
+            const pieces = parseInt(document.getElementById('posPiecesSold').value) || 0;
+            const price = parseFloat(document.getElementById('posPricePerCarat').value) || 0;
+            const caratsPerPiece = gem.caratsPerPiece;
+            const totalCarats = pieces * caratsPerPiece;
+            const total = totalCarats * price;
+
+            const summary = document.getElementById('posSummary');
+            summary.innerHTML = `
+                        <div style="background:var(--bg-secondary);border-radius:8px;padding:16px;margin-bottom:12px;">
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);">
+                                <span class="text-muted">Gem ID</span>
+                                <span><strong>${gem.id}</strong></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);">
+                                <span class="text-muted">Customer</span>
+                                <span><strong>${document.getElementById('posCustomer').value || '—'}</strong></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);">
+                                <span class="text-muted">Pieces</span>
+                                <span><strong>${pieces}</strong></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);">
+                                <span class="text-muted">Carats</span>
+                                <span><strong>${totalCarats} ct</strong></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border-color);">
+                                <span class="text-muted">Price/Carat</span>
+                                <span><strong>$${price.toFixed(2)}</strong></span>
+                            </div>
+                            <div style="display:flex;justify-content:space-between;padding:4px 0;">
+                                <span class="text-muted">Payment</span>
+                                <span><strong>${document.getElementById('posPayment').value}</strong></span>
+                            </div>
+                        </div>
+                        <div style="text-align:center;padding:12px;background:var(--gold);color:var(--bg-primary);border-radius:8px;">
+                            <div style="font-size:12px;text-transform:uppercase;letter-spacing:1px;">Total Amount</div>
+                            <div style="font-size:28px;font-weight:800;">$${total.toFixed(2)}</div>
+                        </div>
+                    `;
+        }
+
+        function clearPOS() {
+            document.getElementById('posCustomer').value = '';
+            document.getElementById('posSearch').value = '';
+            document.getElementById('posPiecesSold').value = 1;
+            document.getElementById('posPricePerCarat').value = '';
+            document.getElementById('posPayment').value = 'Cash';
+            document.getElementById('posTotalAmount').textContent = '$0.00';
+            document.getElementById('posNoGem').style.display = 'block';
+            document.getElementById('posGemDetails').style.display = 'none';
+            document.getElementById('posSummary').innerHTML =
+                '<p class="text-muted" style="text-align:center;padding:40px 0;"><i class="fas fa-cart-plus" style="font-size:48px;display:block;margin-bottom:12px;"></i>No sale in progress.<br />Search and select a gem to begin.</p>';
+            selectedGem = null;
+            showToast('🔄 POS cleared', 'success');
+        }
+
+        function saveSale() {
+            if (!selectedGem) {
+                showToast('❌ Please select a gem first', 'error');
+                return;
+            }
+
+            const customer = document.getElementById('posCustomer').value.trim();
+            if (!customer) {
+                showToast('❌ Please enter customer name', 'error');
+                return;
+            }
+
+            const pieces = parseInt(document.getElementById('posPiecesSold').value) || 0;
+            if (pieces < 1) {
+                showToast('❌ Please enter valid pieces', 'error');
+                return;
+            }
+
+            const price = parseFloat(document.getElementById('posPricePerCarat').value) || 0;
+            if (price <= 0) {
+                showToast('❌ Please enter price per carat', 'error');
+                return;
+            }
+
+            if (pieces > selectedGem.pieces) {
+                showToast('❌ Not enough stock! Only ' + selectedGem.pieces + ' pieces available', 'error');
+                return;
+            }
+
+            const caratsPerPiece = selectedGem.caratsPerPiece;
+            const totalCarats = pieces * caratsPerPiece;
+            const total = totalCarats * price;
+            const payment = document.getElementById('posPayment').value;
+            const invoice = 'INV-' + String(localSales.length + chinaSales.length + 1).padStart(3, '0');
+
+            // Add to local sales
+            localSales.push({
+                date: new Date().toISOString().split('T')[0],
+                invoice: invoice,
+                customer: customer,
+                gemId: selectedGem.id,
+                piecesSold: pieces,
+                caratsSold: totalCarats,
+                pricePerCarat: price,
+                total: total,
+                payment: payment
+            });
+
+            // Update stock
+            const stockIndex = gemStock.findIndex(g => g.id === selectedGem.id);
+            if (stockIndex !== -1) {
+                gemStock[stockIndex].pieces -= pieces;
+                if (gemStock[stockIndex].pieces === 0) {
+                    gemStock[stockIndex].status = 'Sold';
+                }
+            }
+
+            showToast('✅ Sale saved! Invoice: ' + invoice, 'success');
+
+            // Update summary
+            document.getElementById('posSummary').innerHTML = `
+                        <div style="background:var(--bg-secondary);border-radius:8px;padding:16px;text-align:center;">
+                            <i class="fas fa-check-circle" style="font-size:48px;color:#16a34a;display:block;margin-bottom:12px;"></i>
+                            <h3>Sale Completed!</h3>
+                            <p style="color:var(--text-muted);">Invoice: <strong>${invoice}</strong></p>
+                            <p style="color:var(--text-muted);">Total: <strong>$${total.toFixed(2)}</strong></p>
+                            <p style="color:var(--text-muted);">Payment: <strong>${payment}</strong></p>
+                            <button class="btn btn-primary mt-16" onclick="clearPOS()">New Sale</button>
+                        </div>
+                    `;
+
+            // Hide form
+            document.getElementById('posGemDetails').style.display = 'none';
+            document.getElementById('posNoGem').style.display = 'block';
+
+            // Reset
+            selectedGem = null;
+            populateGemList();
+
+            // Update dashboard if visible
+            if (document.getElementById('page-dashboard').classList.contains('active')) {
+                updateDashboard();
+            }
+        }
+
+        function printInvoice() {
+            if (!selectedGem) {
+                showToast('❌ Please select a gem first', 'error');
+                return;
+            }
+            const customer = document.getElementById('posCustomer').value.trim() || '—';
+            const pieces = parseInt(document.getElementById('posPiecesSold').value) || 0;
+            const price = parseFloat(document.getElementById('posPricePerCarat').value) || 0;
+            const caratsPerPiece = selectedGem.caratsPerPiece;
+            const totalCarats = pieces * caratsPerPiece;
+            const total = totalCarats * price;
+            const payment = document.getElementById('posPayment').value;
+            const invoice = 'INV-' + String(localSales.length + chinaSales.length + 1).padStart(3, '0');
+
+            const printWindow = window.open('', '_blank', 'width=600,height=500');
+            printWindow.document.write(`
+                        <html>
+                        <head>
+                            <title>Invoice ${invoice}</title>
+                            <style>
+                                body { font-family: 'Inter', sans-serif; padding: 40px; color: #1a1a2e; }
+                                .header { text-align: center; border-bottom: 2px solid #d4af37; padding-bottom: 16px; margin-bottom: 20px; }
+                                .header h1 { font-family: 'Playfair Display', serif; color: #d4af37; font-size: 28px; }
+                                .header p { color: #6b7280; font-size: 14px; }
+                                .details { margin: 20px 0; }
+                                .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #e5e7eb; }
+                                .total { background: #d4af37; padding: 16px; text-align: center; border-radius: 8px; font-size: 20px; font-weight: 700; margin-top: 20px; }
+                                .footer { text-align: center; margin-top: 30px; font-size: 12px; color: #6b7280; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h1>💎 Zhufu Gems</h1>
+                                <p>Invoice #${invoice} • ${new Date().toISOString().split('T')[0]}</p>
+                            </div>
+                            <div class="details">
+                                <div class="row"><span><strong>Customer</strong></span><span>${customer}</span></div>
+                                <div class="row"><span><strong>Gem ID</strong></span><span>${selectedGem.id}</span></div>
+                                <div class="row"><span><strong>Gem Type</strong></span><span>${selectedGem.gemType}</span></div>
+                                <div class="row"><span><strong>Quality</strong></span><span>${selectedGem.quality}</span></div>
+                                <div class="row"><span><strong>Pieces</strong></span><span>${pieces}</span></div>
+                                <div class="row"><span><strong>Carats</strong></span><span>${totalCarats} ct</span></div>
+                                <div class="row"><span><strong>Price/Carat</strong></span><span>$${price.toFixed(2)}</span></div>
+                                <div class="row"><span><strong>Payment</strong></span><span>${payment}</span></div>
+                            </div>
+                            <div class="total">Total: $${total.toFixed(2)}</div>
+                            <div class="footer">Thank you for your business! • Zhufu Gems</div>
+                            <script>
+                                window.print();
+                                window.close();
+                            <\/script>
+                        </body>
+                        </html>
+                    `);
+            printWindow.document.close();
+        }
+
+        // ============================================================
+        // INVENTORY
+        // ============================================================
+
+        function renderInventory() {
+            const search = document.getElementById('invSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('invTypeFilter').value;
+            const statusFilter = document.getElementById('invStatusFilter').value;
+
+            let filtered = gemStock.filter(g => {
+                const matchSearch = g.id.toLowerCase().includes(search) || g.gemType.toLowerCase().includes(search);
+                const matchType = typeFilter === 'all' || g.gemType === typeFilter;
+                const matchStatus = statusFilter === 'all' || g.status === statusFilter;
+                return matchSearch && matchType && matchStatus;
+            });
+
+            const tbody = document.getElementById('inventoryBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="8" class="text-muted" style="text-align:center;padding:20px;">No gems found</td></tr>';
+            } else {
+                tbody.innerHTML = filtered.map(g => `
+                            <tr>
+                                <td><strong>${g.id}</strong></td>
+                                <td>${g.gemType}</td>
+                                <td>${g.quality}</td>
+                                <td>${g.carats} ct</td>
+                                <td>$${g.cost.toLocaleString()}</td>
+                                <td>${g.pieces}</td>
+                                <td><span class="status-badge ${g.status === 'Available' ? 'available' : 'sold'}">${g.status}</span></td>
+                                <td>
+                                    <button class="btn btn-sm btn-outline" onclick="editGem('${g.id}')"><i class="fas fa-edit"></i></button>
+                                    <button class="btn btn-sm btn-danger" onclick="deleteGem('${g.id}')"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        `).join('');
+            }
+        }
+
+        function showAddGemModal() {
+            editingGemId = null;
+            document.getElementById('gemModalTitle').textContent = 'Add New Gem';
+            document.getElementById('modalId').value = '';
+            document.getElementById('modalType').value = '';
+            document.getElementById('modalQuality').value = '';
+            document.getElementById('modalCarats').value = '';
+            document.getElementById('modalCost').value = '';
+            document.getElementById('modalPieces').value = '1';
+            document.getElementById('modalSupplier').value = '';
+            document.getElementById('modalStatus').value = 'Available';
+            document.getElementById('gemModal').classList.add('show');
+        }
+
+        function editGem(id) {
+            const gem = gemStock.find(g => g.id === id);
+            if (!gem) return;
+            editingGemId = id;
+            document.getElementById('gemModalTitle').textContent = 'Edit Gem';
+            document.getElementById('modalId').value = gem.id;
+            document.getElementById('modalType').value = gem.gemType;
+            document.getElementById('modalQuality').value = gem.quality;
+            document.getElementById('modalCarats').value = gem.carats;
+            document.getElementById('modalCost').value = gem.cost;
+            document.getElementById('modalPieces').value = gem.pieces;
+            document.getElementById('modalSupplier').value = gem.supplier || '';
+            document.getElementById('modalStatus').value = gem.status;
+            document.getElementById('gemModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('gemModal').classList.remove('show');
+        }
+
+        function saveGem() {
+            const id = document.getElementById('modalId').value.trim();
+            const gemType = document.getElementById('modalType').value.trim();
+            const quality = document.getElementById('modalQuality').value.trim();
+            const carats = parseFloat(document.getElementById('modalCarats').value) || 0;
+            const cost = parseFloat(document.getElementById('modalCost').value) || 0;
+            const pieces = parseInt(document.getElementById('modalPieces').value) || 1;
+            const supplier = document.getElementById('modalSupplier').value.trim();
+            const status = document.getElementById('modalStatus').value;
+
+            if (!id || !gemType || !quality || carats <= 0 || cost <= 0) {
+                showToast('❌ Please fill all required fields', 'error');
+                return;
+            }
+
+            const caratsPerPiece = carats / pieces;
+
+            if (editingGemId) {
+                const index = gemStock.findIndex(g => g.id === editingGemId);
+                if (index !== -1) {
+                    gemStock[index] = { ...gemStock[index], id, gemType, quality, carats, cost, pieces, supplier,
+                        status, caratsPerPiece };
+                }
+                showToast('✅ Gem updated!', 'success');
+            } else {
+                if (gemStock.find(g => g.id === id)) {
+                    showToast('❌ Gem ID already exists!', 'error');
+                    return;
+                }
+                gemStock.push({
+                    id,
+                    date: new Date().toISOString().split('T')[0],
+                    gemType,
+                    quality,
+                    carats,
+                    cost,
+                    status,
+                    purchaseType: 'Cash',
+                    supplier,
+                    pieces,
+                    caratsPerPiece
+                });
+                showToast('✅ Gem added!', 'success');
+            }
+
+            closeModal();
+            renderInventory();
+            populateGemList();
+            if (document.getElementById('page-dashboard').classList.contains('active')) {
+                updateDashboard();
+            }
+        }
+
+        function deleteGem(id) {
+            if (!confirm('Delete gem ' + id + '?')) return;
+            gemStock = gemStock.filter(g => g.id !== id);
+            showToast('🗑️ Gem deleted', 'success');
+            renderInventory();
+            populateGemList();
+            if (document.getElementById('page-dashboard').classList.contains('active')) {
+                updateDashboard();
+            }
+        }
+
+        // ============================================================
+        // SALES HISTORY
+        // ============================================================
+
+        function renderSales() {
+            const search = document.getElementById('salesSearch').value.toLowerCase();
+            const typeFilter = document.getElementById('salesTypeFilter').value;
+
+            let allSales = [];
+            if (typeFilter === 'all' || typeFilter === 'Local') {
+                allSales = allSales.concat(localSales.map(s => ({ ...s, region: 'Local' })));
+            }
+            if (typeFilter === 'all' || typeFilter === 'China') {
+                allSales = allSales.concat(chinaSales.map(s => ({ ...s, region: 'China' })));
+            }
+
+            const filtered = allSales.filter(s => {
+                return s.customer.toLowerCase().includes(search) ||
+                    s.invoice.toLowerCase().includes(search) ||
+                    s.gemId.toLowerCase().includes(search);
+            });
+
+            const tbody = document.getElementById('salesBody');
+            if (filtered.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="7" class="text-muted" style="text-align:center;padding:20px;">No sales found</td></tr>';
+            } else {
+                tbody.innerHTML = filtered.sort((a, b) => new Date(b.date) - new Date(a.date)).map(s => `
+                            <tr>
+                                <td><strong>${s.invoice}</strong></td>
+                                <td>${s.date}</td>
+                                <td>${s.customer}</td>
+                                <td>${s.gemId}</td>
+                                <td>${s.caratsSold} ct</td>
+                                <td>$${s.total.toLocaleString()}</td>
+                                <td><span class="status-badge ${s.payment === 'Cash' ? 'available' : 'pending'}">${s.payment}</span></td>
+                            </tr>
+                        `).join('');
+            }
+        }
+
+        function exportSalesCSV() {
+            const allSales = [
+                ...localSales.map(s => ({ ...s, region: 'Local' })),
+                ...chinaSales.map(s => ({ ...s, region: 'China' }))
+            ];
+            if (allSales.length === 0) {
+                showToast('❌ No sales to export', 'error');
+                return;
+            }
+
+            const headers = ['Invoice', 'Date', 'Customer', 'Gem ID', 'Carats', 'Total', 'Payment', 'Region'];
+            const rows = allSales.map(s => [s.invoice, s.date, s.customer, s.gemId, s.caratsSold, s.total, s.payment, s
+                .region
+            ]);
+            const csv = [headers.join(','), ...rows.map(r => r.join(','))].join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'sales_export.csv';
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ Sales exported to CSV', 'success');
+        }
+
+        // ============================================================
+        // REPORTS
+        // ============================================================
+
+        function renderReports() {
+            // P&L Chart
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+            const revenue = months.map(m => {
+                const local = localSales.filter(s => new Date(s.date).toLocaleString('en', { month: 'short' }) === m)
+                    .reduce((sum, r) => sum + r.total, 0);
+                const china = chinaSales.filter(s => new Date(s.date).toLocaleString('en', { month: 'short' }) === m)
+                    .reduce((sum, r) => sum + r.total, 0);
+                return local + china;
+            });
+
+            const expenses = months.map(() => 50000 + Math.random() * 30000);
+            const profit = revenue.map((r, i) => r - expenses[i]);
+
+            if (charts.pnl) charts.pnl.destroy();
+            const ctx1 = document.getElementById('pnlChart').getContext('2d');
+            charts.pnl = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: months,
+                    datasets: [
+                        { label: 'Revenue', data: revenue, backgroundColor: '#d4af37', borderRadius: 4 },
+                        { label: 'Expenses', data: expenses, backgroundColor: '#dc2626', borderRadius: 4 },
+                        { label: 'Profit', data: profit, backgroundColor: '#16a34a', borderRadius: 4 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: { legend: { labels: { color: '#a0aec0', usePointStyle: true } } },
+                    scales: {
+                        y: { beginAtZero: true, ticks: { color: '#a0aec0', callback: v => '$' + v.toLocaleString() } },
+                        x: { ticks: { color: '#a0aec0' } }
+                    }
+                }
+            });
+
+            // Region Chart
+            const totalLocal = localSales.reduce((s, r) => s + r.total, 0);
+            const totalChina = chinaSales.reduce((s, r) => s + r.total, 0);
+
+            if (charts.region) charts.region.destroy();
+            const ctx2 = document.getElementById('regionChart').getContext('2d');
+            charts.region = new Chart(ctx2, {
+                type: 'pie',
+                data: {
+                    labels: ['Local', 'China'],
+                    datasets: [{
+                        data: [totalLocal, totalChina],
+                        backgroundColor: ['#d4af37', '#3b82f6'],
+                        borderWidth: 2,
+                        borderColor: '#1a1a2e'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { position: 'bottom', labels: { color: '#a0aec0', usePointStyle: true } }
+                    }
+                }
+            });
+
+            // Top Customers
+            const customerMap = {};
+            [...localSales, ...chinaSales].forEach(s => {
+                if (!customerMap[s.customer]) {
+                    customerMap[s.customer] = { total: 0, carats: 0 };
+                }
+                customerMap[s.customer].total += s.total;
+                customerMap[s.customer].carats += s.caratsSold;
+            });
+            const sorted = Object.entries(customerMap)
+                .sort((a, b) => b[1].total - a[1].total)
+                .slice(0, 5);
+
+            const tbody = document.getElementById('topCustomersBody');
+            if (sorted.length === 0) {
+                tbody.innerHTML =
+                    '<tr><td colspan="4" class="text-muted" style="text-align:center;padding:20px;">No customer data</td></tr>';
+            } else {
+                tbody.innerHTML = sorted.map(([name, data], i) => `
+                            <tr>
+                                <td>${i + 1}</td>
+                                <td><strong>${name}</strong></td>
+                                <td>$${data.total.toLocaleString()}</td>
+                                <td>${data.carats.toFixed(1)} ct</td>
+                            </tr>
+                        `).join('');
+            }
+        }
+
+        // ============================================================
+        // INIT
+        // ============================================================
+
+        // Auto-init when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDashboard();
+            renderInventory();
+            renderSales();
+            renderReports();
+            populateGemList();
+        });
+
+        // Expose functions globally
+        window.refreshData = refreshData;
+        window.updateDashboard = updateDashboard;
+        window.renderInventory = renderInventory;
+        window.renderSales = renderSales;
+        window.renderReports = renderReports;
+        window.populateGemList = populateGemList;
+        window.clearPOS = clearPOS;
+        window.saveSale = saveSale;
+        window.printInvoice = printInvoice;
+        window.updatePOSTotal = updatePOSTotal;
+        window.showAddGemModal = showAddGemModal;
+        window.editGem = editGem;
+        window.deleteGem = deleteGem;
+        window.closeModal = closeModal;
+        window.saveGem = saveGem;
+        window.exportSalesCSV = exportSalesCSV;
+        window.showToast = showToast;
+    </script>
+</body>
+</html>
